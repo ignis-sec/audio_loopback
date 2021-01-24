@@ -5,6 +5,25 @@
 Along wiht pyaudio, this project is supposed to work together with [VB-Audio's Cable](https://vb-audio.com/Cable/)
 
 
+## Usage
+
+This is meant to be integrated to other software, but you can run the module directly.
+```
+usage: audio_loopback.py [-h] [-v] [-c COUNT] [-r REDUCTION] [-k CONSTANT]
+
+Audio loopback capture, FFT
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --verbose         Set verbosity level
+  -c COUNT, --count COUNT
+                        Count to reduce the array size to
+  -r REDUCTION, --reduction REDUCTION
+                        Reduction coefficient
+  -k CONSTANT, --constant CONSTANT
+                        Constant to multiply output with
+```
+
 ## How to set up
 
 - Install VB-Audio Cable
@@ -34,4 +53,3 @@ Follow [this guide](https://www.howtogeek.com/352787/how-to-set-per-app-sound-ou
 
 
 
-## Testing
