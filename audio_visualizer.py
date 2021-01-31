@@ -162,11 +162,11 @@ class AudioVisualizer2D(AudioVisualizer1D):
         #render colors
         self.color_matrix.render()
 
-    async def visualize(self):
+    async def visualize(self, row=20, col=5):
         """ Loop visualizeOnce infinitely
         """
         while True:
-            self.visualizeOnce()
+            self.visualizeOnce(row,col)
             await asyncio.sleep(self.delay)
 
     async def change_color(self,r,g,b):
