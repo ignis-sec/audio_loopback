@@ -7,7 +7,7 @@ import allogate as logging
 class AudioController:
     """ Simple class to capture fft data from audio stream
     """
-    def __init__(self, aud_format=pyaudio.paInt16, channels=2, rate=48000, device_name="CABLE Output"):
+    def __init__(self, aud_format=pyaudio.paInt16, channels=2, rate=48000, device_name="CABLE Output", dampen=13):
 
         self.FORMAT = aud_format
         self.CHANNELS = channels
@@ -17,7 +17,7 @@ class AudioController:
         self.p = pyaudio.PyAudio()
         
         self.last = []
-
+        self.dampen_coef = dampen
         #open audio 
         logging.pprint("Starting audio stream", 4)
         self.stream = self.p.open(format=self.FORMAT, channels=self.CHANNELS,
@@ -86,6 +86,7 @@ class AudioController:
             # and make sure it's not imaginary
             logging.pprint("Performing FFT...", 6)
             dfft = 10.*np.log10(abs(np.fft.rfft(audio_data)))
+            dfft = self.dampen(dfft)
         except:
             # if something went wrong (most likely division by 0) send last output and hope it doesn't happen again.
             # Yes. This module runs on hopes and dreams.
@@ -93,6 +94,13 @@ class AudioController:
         self.last = AudioController.dfft_reduce(dfft,count,reduction)
         return self.last
 
+    def dampen(self, dfft):
+        for i in range(len(dfft)):
+            a = dfft[i] - self.dampen_coef
+            if(a<0): a=0
+            dfft[i] = a
 
+        return dfft
+        
 
 
