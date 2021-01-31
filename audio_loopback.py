@@ -3,7 +3,7 @@
 import pyaudio
 import numpy as np
 import allogate as logging
-
+import math
 class AudioController:
     """ Simple class to capture fft data from audio stream
     """
@@ -35,17 +35,18 @@ class AudioController:
         self.stream.close()
         self.p.terminate()
 
-    def dfft_reduce(dfft, count=25, reduction_coef=20):
+    def dfft_reduce(dfft, count=25, reduction_coef=20, top=100, skip=30):
         """ Reduce an fft result to "count" elements.
             This is done by summing "reduction_coef" many results into a single value.
             Whatever remains is ignored after count*reduction_coef elements.
         """
         simplified = []
         sumt = 0
+        t = int(top/count)
         for j in range(count):
             for k in range(reduction_coef):
-                if(dfft[count*j+k]>0):
-                    sumt+=dfft[count*j+k]
+                if(dfft[skip+t*j+k]>0):
+                    sumt+=dfft[skip+t*j+k]
             simplified.append(sumt)
             sumt=0
             
@@ -70,7 +71,7 @@ class AudioController:
             if(self.p.get_device_info_by_index(i)["name"].startswith(name)):
                 return self.p.get_device_info_by_index(i)["index"]
 
-    def readOnce(self,count,reduction):
+    def readOnce(self,count,reduction,top=100):
         """ Read data from stream but only once.
         """
         # Read chunk sized data from stream
@@ -85,7 +86,7 @@ class AudioController:
             # Fast Fourier Transform, 10*log10(abs) is to scale it to dB
             # and make sure it's not imaginary
             logging.pprint("Performing FFT...", 6)
-            dfft = 10.*np.log10(abs(np.fft.rfft(audio_data)))
+            dfft = 10.*np.log10(abs(np.fft.rfft(audio_data)/len(audio_data)))
             dfft = self.dampen(dfft)
         except:
             # if something went wrong (most likely division by 0) send last output and hope it doesn't happen again.
@@ -93,7 +94,7 @@ class AudioController:
             return self.last
         self.last = AudioController.dfft_reduce(dfft,count,reduction)
         return self.last
-
+        print(self.last)
     def dampen(self, dfft):
         for i in range(len(dfft)):
             a = dfft[i] - self.dampen_coef

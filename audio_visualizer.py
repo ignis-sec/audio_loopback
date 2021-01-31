@@ -32,7 +32,7 @@ class AudioVisualizer1D:
         self.ceiling = ceiling
         self.ambient_brightness_coef = ambient_brightness_coef
 
-    def visualizeOnce(self, falloff=0.8, rows=25, col=20):
+    def visualizeOnce(self, falloff=0.8, rows=25, col=20, top=100):
         """ Visualize current levels of audio on the razer devices, and render it
         """
         
@@ -57,7 +57,7 @@ class AudioVisualizer1D:
     async def change_color(self, r,g,b):
         self.device_controller.fade(r,g,b)
         
-    async def visualize(self, falloff=0.9, row=25, col=20):
+    async def visualize(self, falloff=0.9, row=25, col=20, top=100):
         """ Loop visualizeOnce infinitely async
         """
         while True:
@@ -103,7 +103,7 @@ class AudioVisualizer2D(AudioVisualizer1D):
     """ Audio visualizer class for 2d devices.
         convert audio data to color_matrix
     """
-    def __init__(self, color_matrix, audio_controller=None, ceiling=1220, fade=0.8, delay=0.05, ambient_brightness_coef=15, dampen=1000, dampen_bias=0.92, ceiling_bias=0.98):
+    def __init__(self, color_matrix, audio_controller=None, ceiling=1220, fade=0.8, delay=0.05, ambient_brightness_coef=0.1, dampen=1000, dampen_bias=0.92, ceiling_bias=0.98):
         """
         @param ceiling - Threshold to clamp audio data when reached. Maximum audio level from input.
         @param fade - fade constant, higher the value, longer the fade effect will last. Between 0-1
@@ -115,12 +115,11 @@ class AudioVisualizer2D(AudioVisualizer1D):
         self.dampen_bias = dampen_bias
         self.ceiling_bias = ceiling_bias
 
-    def visualizeOnce(self,row=25,col=20):
+    def visualizeOnce(self,row=25,col=20, top=100):
         """ Visualize current levels of audio on the 2d device, and render it
         """
         #audio data from stream (after fft)
-        data = self.audio.readOnce(row,col)
-
+        data = self.audio.readOnce(row,col, top)
         #for each column of 2d device
         for i in range(len(self.color_matrix.red[0])):
             for j in range(6):
@@ -162,11 +161,11 @@ class AudioVisualizer2D(AudioVisualizer1D):
         #render colors
         self.color_matrix.render()
 
-    async def visualize(self, row=20, col=5):
+    async def visualize(self, row=25,col=5,top=100):
         """ Loop visualizeOnce infinitely
         """
         while True:
-            self.visualizeOnce(row,col)
+            self.visualizeOnce(row,col,top)
             await asyncio.sleep(self.delay)
 
     async def change_color(self,r,g,b):
