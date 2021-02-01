@@ -129,6 +129,15 @@ class AudioVisualizer2D(AudioVisualizer1D):
                 self.color_matrix.green[j][i]=math.floor(self.color_matrix.green[j][i]*self.fade)
                 self.color_matrix.blue[j][i]=math.floor(self.color_matrix.blue[j][i]*self.fade)
 
+
+                if(self.color_matrix.red[j][i]<self.minr):
+                    self.color_matrix.red[j][i] = self.minr
+                if(self.color_matrix.green[j][i]<self.ming):
+                    self.color_matrix.green[j][i] = self.ming
+                if(self.color_matrix.blue[j][i]<self.minb):
+                    self.color_matrix.blue[j][i] = self.minb
+
+
         #sanitize data, in case of -inf and division by zeroes
 
         current_dampening = self.dampen
@@ -171,6 +180,9 @@ class AudioVisualizer2D(AudioVisualizer1D):
     async def change_color(self,r,g,b):
         """ Change color, use color corrections
         """
+        self.minr = int(self.r * self.ambient_brightness_coef)
+        self.minb = int(self.g * self.ambient_brightness_coef)
+        self.ming = int(self.b * self.ambient_brightness_coef)
         self.r=r
         self.g=g
         self.b=b
