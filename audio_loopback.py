@@ -74,6 +74,19 @@ class AudioController:
     def readOnce(self,count,reduction,top=100):
         """ Read data from stream but only once.
         """
+        audio_data = self.rawRead()
+        return self.process_audio(audio_data,count,reduction)
+        
+
+    def dampen(self, dfft):
+        for i in range(len(dfft)):
+            a = dfft[i] - self.dampen_coef
+            if(a<0): a=0
+            dfft[i] = a
+
+        return dfft
+    
+    def rawRead(self):
         # Read chunk sized data from stream
         logging.pprint("Reading data...", 6)
         in_data = self.stream.read(self.CHUNK)
@@ -81,7 +94,9 @@ class AudioController:
         # Format audio data
         logging.pprint("Formatting data...", 6)
         audio_data = np.fromstring(in_data, np.int16)
-        
+        return audio_data
+
+    def process_audio(self,audio_data,count,reduction):
         try:
             # Fast Fourier Transform, 10*log10(abs) is to scale it to dB
             # and make sure it's not imaginary
@@ -94,14 +109,3 @@ class AudioController:
             return self.last
         self.last = AudioController.dfft_reduce(dfft,count,reduction)
         return self.last
-        print(self.last)
-    def dampen(self, dfft):
-        for i in range(len(dfft)):
-            a = dfft[i] - self.dampen_coef
-            if(a<0): a=0
-            dfft[i] = a
-
-        return dfft
-        
-
-
