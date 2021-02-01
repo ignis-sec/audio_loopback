@@ -181,8 +181,8 @@ class AudioVisualizer2D(AudioVisualizer1D):
         """ Change color, use color corrections
         """
         self.minr = int(self.r * self.ambient_brightness_coef)
-        self.minb = int(self.g * self.ambient_brightness_coef)
-        self.ming = int(self.b * self.ambient_brightness_coef)
+        self.ming = int(self.g * self.ambient_brightness_coef)
+        self.minb = int(self.b * self.ambient_brightness_coef)
         self.r=r
         self.g=g
         self.b=b
