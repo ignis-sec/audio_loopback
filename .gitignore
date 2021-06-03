@@ -1,1 +1,7 @@
 __pycache__/
+
+docs/
+
+venv/*
+
+.idea/
