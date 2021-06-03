@@ -2,8 +2,8 @@
 
 
 ## Dependecies
-Along wiht pyaudio, this project is supposed to work together with [VB-Audio's Cable](https://vb-audio.com/Cable/)
-
+Along with pyaudio, this project is supposed to work together with [VB-Audio's Cable](https://vb-audio.com/Cable/) on Windows.
+Supports Linux with pulse too.
 
 ## Usage
 
@@ -24,7 +24,7 @@ optional arguments:
                         Constant to multiply output with
 ```
 
-## How to set up
+## How to set up on windows
 
 - Install VB-Audio Cable
 - Go to Windows Sound Settings, Playback Devices.
@@ -36,12 +36,17 @@ optional arguments:
 - Under "Levels" tab, set both "CABLE Output" and "Wave In Volume" to 100%.
 - Save settings and close.
 
-## How to set up an application for loopback
+## How to set up on Linux
+- Install imports with pip.
+- Install pavucontrol.
+- Change the device being recorded to "Monitor of *your_output_device*"
+
+## How to set up an application for loopback (Windows)
 
 Follow [this guide](https://www.howtogeek.com/352787/how-to-set-per-app-sound-outputs-in-windows-10/) to change the sound device your application is feeding output to. If you are not hearing output from the application after this, make sure you read `How to set up` part, and set the "listen" settings properly.
 
 
-## How to set up an everything for loopback
+## How to set up an everything for loopback  (Windows)
 - Go to Windows Sound Settings, Playback Devices.
 - Set CABLE Input as your default playback device.
 - Go to Windows Sound Settings, Recording Devices.
