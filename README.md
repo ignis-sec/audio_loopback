@@ -1,5 +1,6 @@
 # Audio Speaker FFT
 
+Documentation: http://ignis.wtf/audio_loopback/
 
 ## Dependecies
 Along with pyaudio, this project is supposed to work together with [VB-Audio's Cable](https://vb-audio.com/Cable/) on Windows.
